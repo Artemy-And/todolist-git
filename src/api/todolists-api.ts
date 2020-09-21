@@ -12,11 +12,12 @@ const instance = axios.create({
 // api
 export const todolistAPI = {
 
+
     getTodolist() {
         return instance.get<Array<TodolistType>>(`todo-lists/`)
     },
     createTodolist(title: string) {
-        return instance.post<ResponseType<{ item: TodolistType }>>(`todo-lists/`, {title})
+        return instance.post<ResponseType<{ item: TodolistType }>>(`todo-lists/`, {title:title})
     },
     deleteTodolist(todolistId: string) {
         return instance.delete<ResponseType>(`todo-lists/${todolistId}`);
@@ -46,8 +47,38 @@ export const taskAPI = {
     }
 
 }
+// export const authAPI = {
+//     me() {
+//         return instance.get<ResponseType<AuthMeType>>("auth/me")
+//     },
+//     login(data:LoginParamsType){
+//         return instance.post<ResponseType<{userId?:string}>>("auth/login",data)
+//     },
+//     logout(){
+//         return instance.delete<ResponseType>(`auth/login`);
+//     }
+// }
+export const auth = {
+    authMe(){
+        return instance.get<ResponseType<{id:number,email:string,login:string}>>(`auth/me`)
+    },
+    login(data:loginType){
+        return instance.post<ResponseType<{userId?:number}>>(`auth/login`,data)
+    },
+    logOut(){
+        return instance.delete<ResponseType<{userId?:number}>>(`auth/login`)
+    }
+}
+
+
 
 // types
+export type loginType = {
+    email:string
+    password:string
+    rememberMe:boolean
+    captcha?:string
+}
 export type TaskType = {
     description: string
     title: string
@@ -97,7 +128,7 @@ type DeleteTodolistResponseType = {
     messages: Array<string>
     data: {}
 }
-type ResponseType<D = {}> = {//если D не передавать то он будет путым объектом
+export type ResponseType<D = {}> = {//если D не передавать то он будет путым объектом
     resultCode: number
     messages: Array<string>
     data: D

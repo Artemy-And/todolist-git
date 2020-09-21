@@ -15,18 +15,30 @@ import {Grid} from "@material-ui/core";
 import AddItemForm from "../../../components/AddItemForm/AddItemForm";
 import Paper from "@material-ui/core/Paper";
 import {Todolist} from "./TodoList"
+import { Redirect } from "react-router-dom";
 
 
-type TodolistsListType = {
-    // todolists:Array<TodolistDomainType>
+type PropsType = {
+    demo?: boolean
 }
 
-export const TodolistsList: React.FC<TodolistsListType> = (props) => {
+export const TodolistsList: React.FC<PropsType> = ({demo = false}) => {
     const dispatch = useDispatch();
     const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
+    const isLoggedIn = useSelector<AppRootStateType, boolean>(state => state.auth.isLoggedIn)
+    const isInitialized = useSelector<AppRootStateType, boolean>(state => state.app.isInitialized)
 
+    // useEffect(() => {
+    //     if (demo||!isInitialized) {
+    //         return
+    //     }
+    //     dispatch(fetchTodoListTC())
+    // }, [])
     useEffect(() => {
+        if (demo||!isLoggedIn) {
+            return
+        }
         dispatch(fetchTodoListTC())
     }, [])
 
@@ -69,7 +81,9 @@ export const TodolistsList: React.FC<TodolistsListType> = (props) => {
 
     }, [dispatch])
 
-
+    if (!isLoggedIn){
+        return <Redirect to={'/login'}/>
+    }
     return <> <Grid container style={{padding: "10px"}}>
         <AddItemForm addItem={addTodoList}/>
     </Grid>
@@ -83,17 +97,16 @@ export const TodolistsList: React.FC<TodolistsListType> = (props) => {
                         <Paper style={{padding: "10px"}}>
                             <Todolist
                                 key={tl.id}
-                                id={tl.id}
-                                title={tl.title}
+                                todolist={tl}
                                 tasks={tasksForTodolist}
                                 removeTask={removeTask}
                                 changeFilter={changeFilter}
                                 addTask={addTask}
                                 changeTaskStatus={changeStatus}
-                                filter={tl.filter}
                                 removeTodolist={removeTodolist}
                                 changeTaskTitle={changeTaskTitle}
                                 ChangeTOD={ChangeTOD}
+                                demo={demo}
                             />
                         </Paper>
                     </Grid>
