@@ -9,6 +9,8 @@ import {TaskPriorities, TaskStatuses} from "../../api/todolists-api";
 import {appReducer} from "../../app/app-reducer";
 import thunk from "redux-thunk";
 import {authReducer} from "../../features/Login/auth-reducer";
+import {configureStore} from "@reduxjs/toolkit";
+import {HashRouter} from "react-router-dom";
 
 
 const rootReducer = combineReducers({
@@ -50,18 +52,27 @@ const initialGlobalState = {
         ]
     },
     app: {
-        status: 'idle',
+        status: 'succeeded',//succed
         error: null,
-        isInitialized:false
+        isInitialized:true//true
     },
     auth:{
-        isLoggedIn: false
+        isLoggedIn: true//true
     }
 };
 
 export const storyBookStore = createStore(rootReducer, initialGlobalState as AppRootStateType,applyMiddleware(thunk));
+// export const storyBookStore = configureStore({
+//     reducer:rootReducer,
+//     preloadedState:initialGlobalState,
+//     middleware:getDefaultMiddleware => getDefaultMiddleware().prepend(thunk)
+// })
 
 export const ReduxStoreProviderDecorator = (storyFn: any) => (
     <Provider
         store={storyBookStore}>{storyFn()}
     </Provider>)
+
+export const BrowserRouterDecorator = (storyFn: any) => (
+    <HashRouter>{storyFn()}
+    </HashRouter>)

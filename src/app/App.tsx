@@ -51,7 +51,7 @@ const App = React.memo(({demo = false}: PropsType) => {
     // }
 
     return (
-        <BrowserRouter>
+        // <BrowserRouter>
             <div className="App">
                 <ErrorSnackbar/>
                 <AppBar position="static">
@@ -79,7 +79,7 @@ const App = React.memo(({demo = false}: PropsType) => {
 
 
             </div>
-        </BrowserRouter>
+        // </BrowserRouter>
 
 
     );
